@@ -1,0 +1,326 @@
+/* ─── Container ─────────────────────────────────────────── */
+.dash-container {
+  padding-top: 20px;
+  margin-bottom: 32px;
+  animation: dashFadeIn 0.7s ease-out;
+}
+
+@keyframes dashFadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%   { transform: scale(0.95); opacity: 1;   box-shadow: 0 0 0 0 rgba(16,185,129,0.6); }
+  70%  { transform: scale(1.1);  opacity: 0.7; box-shadow: 0 0 0 6px rgba(16,185,129,0); }
+  100% { transform: scale(0.95); opacity: 1;   box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+}
+
+/* ─── Real-time dot ─────────────────────────────────────── */
+.realtime-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulse 2s infinite ease-in-out;
+}
+
+.realtime-value {
+  font-size: 42px;
+  font-weight: 900;
+  color: #0f172a;
+  line-height: 1;
+}
+
+[data-theme='dark'] .realtime-value {
+  color: #e2e8f0 !important;
+}
+
+.realtime-text { font-size: 13px; color: #00796b; font-weight: 700; }
+[data-theme='dark'] .realtime-text { color: #2dd4bf !important; }
+
+/* ─── Section Labels ─────────────────────────────────────── */
+.section-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 12px;
+  padding-left: 2px;
+}
+
+/* ─── Unified Glass Card — LIGHT MODE ────────────────────── */
+/*
+ * In light mode: near-white frosted glass.
+ * The glass effect comes from backdrop-filter blur + layered borders +
+ * a subtle colored glow shadow — NOT from a blue background tint.
+ * This keeps the card neutral/white-ish while still feeling glassy.
+ */
+.glass-stat-card {
+  border-radius: 18px;
+  padding: 16px 20px;
+  height: 100%;
+  position: relative;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  /* Soft Frosted White with subtle tint */
+  background: rgba(248, 250, 252, 0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+
+  /* Softer highlights */
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  border-right: 1px solid rgba(0, 0, 0, 0.04);
+
+  /* Soft depth */
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.04),
+    0 1px 2px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.glass-stat-card:hover {
+  transform: translateY(-4px);
+  background: rgba(248, 250, 252, 0.85);
+  box-shadow:
+    0 12px 36px rgba(18, 130, 162, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+/* ─── Card internals ─────────────────────────────────────── */
+.glass-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 8px;
+}
+
+.glass-stat-label {
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+  color: #64748b !important;
+}
+
+.glass-stat-value {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  color: #1e293b;
+  line-height: 1.25;
+}
+
+.glass-stat-sub {
+  display: block;
+  font-size: 11px !important;
+  color: #94a3b8 !important;
+  margin-top: 3px;
+}
+
+.glass-stat-growth {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 7px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.glass-stat-growth.pos { color: #047857; }
+.glass-stat-growth.neg { color: #be123c; }
+.vs-text { font-size: 10px; opacity: 0.55; font-weight: 500; }
+
+/* ─── Mini Cards ─────────────────────────────────────────── */
+.glass-mini-card {
+  border-radius: 16px;
+  padding: 14px 18px;
+  height: 100%;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border-top: 1px solid rgba(255, 255, 255, 0.9);
+  border-left: 1px solid rgba(255, 255, 255, 0.8);
+  border-right: 1px solid rgba(0, 0, 0, 0.04);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07), inset 0 1px 0 rgba(255,255,255,1);
+}
+
+.glass-mini-card:hover {
+  transform: scale(1.02);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.glass-mini-value {
+  font-size: 16px;
+  font-weight: 900;
+  color: #1e293b;
+  margin-top: 6px;
+}
+
+/* ─── Top product badge ──────────────────────────────────── */
+.top-product-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(232, 85, 128, 0.08);
+  color: #E85580;
+  border: 1px solid rgba(232, 85, 128, 0.2);
+}
+
+/* ─── Segmented Filter ───────────────────────────────────── */
+.filter-segmented .ant-segmented-item-selected {
+  background: #0c4a6e !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(12, 74, 110, 0.45) !important;
+}
+.filter-segmented .ant-segmented-item { font-weight: 600; color: #475569; }
+[data-theme='dark'] .filter-segmented .ant-segmented-item { color: #94a3b8; }
+
+/* ─── SEO Table ──────────────────────────────────────────── */
+.seo-row td { border-bottom: 1px solid rgba(0,0,0,0.04) !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════════════════════════ */
+[data-theme='dark'] .glass-stat-card,
+[data-theme='dark'] .glass-mini-card {
+  background: rgba(17, 24, 39, 0.45) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+
+  /* Glass border — softer edge */
+  border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.4) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.4) !important;
+
+  /* Softer Glow */
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme='dark'] .glass-stat-card:hover,
+[data-theme='dark'] .glass-mini-card:hover {
+  background: rgba(30, 44, 68, 0.5) !important;
+  box-shadow:
+    0 12px 48px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme='dark'] .glass-stat-value,
+[data-theme='dark'] .glass-mini-value {
+  color: #f1f5f9 !important;
+}
+
+[data-theme='dark'] .glass-stat-label { color: #94a3b8 !important; }
+[data-theme='dark'] .glass-stat-sub   { color: #64748b !important; }
+[data-theme='dark'] .section-label    { color: #64748b !important; }
+
+/* ─── PRINT STYLES ───────────────────────────────────────── */
+@media print {
+  @page {
+    margin: 2cm;
+    size: A4 portrait;
+  }
+
+  body, .dash-container, .ant-layout-content {
+    background: #fff !important;
+    color: #000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Professional Header for Print */
+  .dash-container::before {
+    content: "LAPORAN ANALISIS PELANGGAN - ABBY N BEV";
+    display: block;
+    text-align: center;
+    font-size: 18pt;
+    font-weight: bold;
+    margin-bottom: 20pt;
+    border-bottom: 2pt solid #000;
+    padding-bottom: 10pt;
+  }
+
+  .dash-container::after {
+    content: "Dicetak pada: " attr(data-print-date);
+    display: block;
+    text-align: right;
+    font-size: 8pt;
+    margin-top: 30pt;
+    font-style: italic;
+  }
+
+  /* Remove all glass effects and shadows for print */
+  .glass-stat-card, .glass-mini-card, .GCard {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    break-inside: avoid;
+    margin-bottom: 20pt !important;
+    padding: 15pt !important;
+    border-top: 3pt solid #b31f5f !important; /* Keep the color accent for professional look */
+  }
+
+  .glass-stat-value, .glass-mini-value, .ant-typography {
+    color: #000 !important;
+    font-size: 20pt !important;
+  }
+
+  .glass-stat-label, .glass-stat-sub, .section-label {
+    color: #444 !important;
+    font-size: 9pt !important;
+    text-transform: uppercase;
+  }
+
+  /* Ensure chart is visible and high quality */
+  .recharts-responsive-container {
+    width: 100% !important;
+    height: 400px !important;
+    margin: 20pt 0 !important;
+  }
+
+  .recharts-cartesian-grid-horizontal line,
+  .recharts-cartesian-grid-vertical line {
+    stroke: #eee !important;
+  }
+
+  /* Hide buttons/avatars/other UI elements in print */
+  button, .ant-btn, .ant-avatar, .ant-segmented, .no-print, .ant-tabs-nav {
+    display: none !important;
+  }
+
+  /* Force table colors */
+  .ant-table {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 10pt !important;
+  }
+  .ant-table-thead > tr > th {
+    background: #f9f9f9 !important;
+    color: #444 !important;
+    border-bottom: 2pt solid #eee !important;
+    font-weight: bold !important;
+  }
+  .ant-table-tbody > tr > td {
+    border-bottom: 1pt solid #eee !important;
+  }
+
+  /* Layout adjustments */
+  .ant-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+  .ant-col-md-8 {
+    width: 33.33% !important;
+  }
+}

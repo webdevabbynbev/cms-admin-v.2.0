@@ -1,0 +1,58 @@
+.ant-layout {
+    height: 100%;
+}
+
+.trigger {
+    padding: 0 24px;
+    font-size: 18px;
+    line-height: 64px;
+    cursor: pointer;
+    transition: color 0.3s;
+    margin-top: 5px;
+}
+
+.trigger:hover {
+    color: var(--ant-primary-color);
+}
+
+.logo {
+    min-height: 80px;
+    margin: 16px;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+}
+
+.logo img {
+    height: 52px;
+    width: auto;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.logo.collapsed {
+    min-height: 64px;
+    padding: 12px;
+}
+
+.logo.collapsed img {
+    height: 28px;
+}
+
+.site-layout {
+    padding: 20px;
+}
+
+.site-layout .site-layout-background {
+    border-radius: 0.428rem;
+}
+
+.ant-layout-sider {
+    box-shadow: 0 0 15px 0 rgb(34 41 47 / 5%);
+    overflow-x: hidden;
+}

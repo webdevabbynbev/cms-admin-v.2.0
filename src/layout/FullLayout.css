@@ -1,0 +1,15 @@
+.left-side {
+  display: none;
+  flex: 1;
+  min-height: 100vh;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-color: #9b3c6c;
+}
+
+@media (min-width: 992px) {
+  .left-side {
+    display: block !important;
+  }
+}

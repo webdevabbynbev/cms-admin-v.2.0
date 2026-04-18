@@ -1,0 +1,8 @@
+﻿
+D:\Work\SJA Textile\Projects\cms-admin\src\components\Transaction\OrderManagementModal.tsx
+  513:25  error  'diskonProduk' is never reassigned. Use 'const' instead       prefer-const
+  522:25  error  'remainingDiscount' is never reassigned. Use 'const' instead  prefer-const
+
+Γ£û 2 problems (2 errors, 0 warnings)
+  2 errors and 0 warnings potentially fixable with the `--fix` option.
+
