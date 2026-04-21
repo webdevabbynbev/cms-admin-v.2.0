@@ -1,5 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
-import { Button, Result, Typography } from 'antd';
+import { AlertCircle, RefreshCw, RotateCcw } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 import { env, config } from '../../utils/env';
 
 interface Props {
@@ -24,20 +26,10 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    this.setState({
-      error,
-      errorInfo,
-    });
+    this.setState({ error, errorInfo });
 
-    // Log error to console in development
-    if (config.enableDebugLogging) {
-      
-    }
-
-    // Report to error monitoring service if available
     if (config.enableErrorReporting && env.SENTRY_DSN) {
-      // Here you would integrate with Sentry or similar service
-      
+      // Sentry / monitoring integration hook
     }
   }
 
@@ -51,52 +43,57 @@ class ErrorBoundary extends Component<Props, State> {
 
   render() {
     if (this.state.hasError) {
-      // Custom fallback UI
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
-      // Default error UI
       return (
-        <div style={{ padding: '20px', textAlign: 'center' }}>
-          <Result
-            status="error"
-            title="Something went wrong"
-            subTitle={
-              <div>
-                <Typography.Paragraph>
-                  An unexpected error occurred. Please try again or contact support if the problem persists.
-                </Typography.Paragraph>
-                {config.enableDebugLogging && this.state.error && (
-                  <Typography.Paragraph
-                    type="danger"
-                    style={{ fontSize: '12px', textAlign: 'left', marginTop: '16px' }}
-                  >
-                    <strong>Error Details:</strong>
-                    <br />
-                    {this.state.error.message}
-                    {this.state.errorInfo && (
-                      <>
-                        <br />
-                        <br />
-                        <strong>Component Stack:</strong>
-                        <br />
-                        {this.state.errorInfo.componentStack}
-                      </>
-                    )}
-                  </Typography.Paragraph>
-                )}
+        <div className="flex min-h-screen items-center justify-center bg-background p-6">
+          <div className="flex w-full max-w-lg flex-col items-center gap-6 rounded-lg border border-border bg-card p-8 text-center shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <h2 className="text-xl font-semibold text-foreground">
+                Something went wrong
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                An unexpected error occurred. Please try again or contact support if the
+                problem persists.
+              </p>
+            </div>
+
+            {config.enableDebugLogging && this.state.error ? (
+              <div className="w-full rounded-md border border-border bg-muted p-3 text-left">
+                <p className="text-xs font-semibold text-destructive">Error Details:</p>
+                <p className="mt-1 break-words font-mono text-xs text-foreground">
+                  {this.state.error.message}
+                </p>
+                {this.state.errorInfo ? (
+                  <>
+                    <p className="mt-3 text-xs font-semibold text-destructive">
+                      Component Stack:
+                    </p>
+                    <pre className="mt-1 max-h-48 overflow-auto whitespace-pre-wrap font-mono text-[11px] text-muted-foreground">
+                      {this.state.errorInfo.componentStack}
+                    </pre>
+                  </>
+                ) : null}
               </div>
-            }
-            extra={[
-              <Button key="retry" onClick={this.handleRetry}>
+            ) : null}
+
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button variant="outline" onClick={this.handleRetry}>
+                <RotateCcw className="h-4 w-4" />
                 Try Again
-              </Button>,
-              <Button key="reload" type="primary" onClick={this.handleReload}>
+              </Button>
+              <Button onClick={this.handleReload}>
+                <RefreshCw className="h-4 w-4" />
                 Reload Page
-              </Button>,
-            ]}
-          />
+              </Button>
+            </div>
+          </div>
         </div>
       );
     }

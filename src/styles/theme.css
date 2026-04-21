@@ -1,0 +1,268 @@
+/* =============================================================================
+ * ABBYNBEV CMS — THEME
+ *
+ * Single source of truth for all colors.
+ * Never hardcode hex values outside of this file.
+ *
+ * Structure:
+ *   Layer 1 — Raw palette (design tokens by name)
+ *   Layer 2 — Semantic tokens (by purpose)
+ *   Layer 3 — Shadcn UI variable mapping
+ * ============================================================================= */
+
+:root {
+  /* ==========================================================================
+   * LAYER 1 — RAW PALETTE
+   * ========================================================================== */
+
+  /* ----- White Primary ----- */
+  --white-500: #fafafc; /* Bright Snow */
+  --white-400: #faf7f3; /* Parchment */
+  --white-300: #f5f0e7; /* Soft Linen */
+
+  /* ----- Black Primary (Prussian Blue family) ----- */
+  --black-500: #1a2638; /* Prussian Blue */
+  --black-400: #253751; /* Deep Space Blue */
+  --black-300: #304769; /* Yale Blue */
+  --black-200: #47689a; /* Baltic Blue */
+  --black-100: #6c8cbc; /* Dusty Denim */
+  --black-50: #9db2d2;  /* Powder Blue */
+  --black-20: #d6dfec;  /* Alice Blue 20 */
+  --black-10: #e6ecf4;  /* Alice Blue 10 */
+  --black-5: #f1f4f9;   /* Platinum */
+
+  /* ----- Pink Primary (Hot Rose family) ----- */
+  --pink-600: #9f2d60; /* Deep Rose (extended for accent ramp) */
+  --pink-500: #be3674; /* Hot Rose */
+  --pink-400: #c6457f; /* Rose Punch */
+  --pink-300: #ce538a; /* Fuchsia Plum */
+  --pink-200: #d875a2; /* Sweet Peony */
+  --pink-100: #e298b9; /* Pink Mist */
+  --pink-50: #ecbad0;  /* Soft Blossom */
+  --pink-20: #f3d2e0;  /* Petal Frost */
+  --pink-10: #f9e8ef;  /* Lavender Blush 10 */
+  --pink-5: #fcf3f7;   /* Lavender Blush 5 */
+
+  /* ----- Success (Green) ----- */
+  --success-600: #18382c;
+  --success-500: #235c48;
+  --success-400: #32806a;
+  --success-300: #52a48c;
+  --success-100: #c8e8e2;
+  --success-50: #e4f4f0;
+
+  /* ----- Error (Red) ----- */
+  --error-700: #421818;
+  --error-600: #4a160a;
+  --error-500: #7a2814;
+  --error-400: #b41411;
+  --error-300: #de6767;
+  --error-200: #e88d8d;
+  --error-100: #efb3b3;
+  --error-50: #f7d9d9;
+  --error-20: #fcf2f2;
+  --error-border: #cc6858;
+
+  /* ----- Golden Yellow ----- */
+  --gold-600: #6b5400;
+  --gold-500: #9a7a00;
+  --gold-400: #c9a800;
+  --gold-300: #d3bf3a;
+  --gold-100: #f5ea80;
+  --gold-50: #fdfae8;
+
+  /* ----- Disable (Neutral Gray) ----- */
+  --gray-800: #1f2937;
+  --gray-500: #6b7280;
+  --gray-400: #9ca3af;
+  --gray-300: #d1d5db;
+  --gray-200: #e5e7eb;
+  --gray-100: #f3f4f6;
+
+  /* ==========================================================================
+   * LAYER 2 — SEMANTIC TOKENS (by purpose)
+   *
+   * Components consume these, never Layer 1 directly.
+   * ========================================================================== */
+
+  /* ----- Surface / Background ----- */
+  --color-bg-base: var(--white-500);
+  --color-bg-subtle: var(--white-400);
+  --color-bg-muted: var(--black-5);
+
+  /* ----- Text ----- */
+  --color-text-primary: var(--black-500);
+  --color-text-secondary: var(--black-300);
+  --color-text-muted: var(--gray-500);
+  --color-text-inverse: var(--white-500);
+
+  /* ----- Interactive (Brand / Button / Info) ----- */
+  --color-interactive-solid: var(--black-400);
+  --color-interactive-solid-hover: var(--black-300);
+  --color-interactive-solid-active: var(--black-500);
+  --color-interactive-text: var(--black-500);
+  --color-interactive-border: #ced9e9;
+  --color-interactive-bg: var(--black-5);
+
+  /* ----- Accent (ABeauties / Pink) ----- */
+  --color-accent-solid: var(--pink-500);
+  --color-accent-solid-hover: var(--pink-400);
+  --color-accent-solid-active: var(--pink-600);
+  --color-accent-text: var(--pink-500);
+  --color-accent-border: var(--pink-50);
+  --color-accent-bg: var(--pink-5);
+
+  /* ----- Success ----- */
+  --color-success-solid: var(--success-500);
+  --color-success-solid-hover: var(--success-400);
+  --color-success-text: var(--success-600);
+  --color-success-border: var(--success-100);
+  --color-success-bg: var(--success-50);
+
+  /* ----- Error / Danger ----- */
+  --color-error-solid: var(--error-500);
+  --color-error-solid-hover: var(--error-400);
+  --color-error-text: var(--error-600);
+  --color-error-border: var(--error-border);
+  --color-error-bg: var(--error-20);
+
+  /* ----- Award (Golden Yellow) ----- */
+  --color-award-solid: var(--gold-400);
+  --color-award-solid-hover: var(--gold-500);
+  --color-award-text: var(--gold-600);
+  --color-award-border: var(--gold-100);
+  --color-award-bg: var(--gold-50);
+
+  /* ----- Disabled / Muted ----- */
+  --color-disabled-solid: var(--gray-500);
+  --color-disabled-text: var(--gray-400);
+  --color-disabled-border: var(--gray-300);
+  --color-disabled-bg: var(--gray-100);
+
+  /* ----- Border (general) ----- */
+  --color-border-default: var(--black-20);
+  --color-border-strong: var(--black-50);
+
+  /* ==========================================================================
+   * LAYER 3 — SHADCN UI MAPPING
+   *
+   * Shadcn components read from these variables.
+   * Mapping semantic tokens → Shadcn's expected variable names.
+   * ========================================================================== */
+
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-primary);
+
+  --card: var(--color-bg-base);
+  --card-foreground: var(--color-text-primary);
+
+  --popover: var(--color-bg-base);
+  --popover-foreground: var(--color-text-primary);
+
+  --primary: var(--color-interactive-solid);
+  --primary-foreground: var(--color-text-inverse);
+
+  --secondary: var(--color-bg-muted);
+  --secondary-foreground: var(--color-text-primary);
+
+  --muted: var(--color-disabled-bg);
+  --muted-foreground: var(--color-text-muted);
+
+  --accent: var(--color-accent-solid);
+  --accent-foreground: var(--color-text-inverse);
+
+  --destructive: var(--color-error-solid);
+  --destructive-foreground: var(--color-text-inverse);
+
+  --border: var(--color-border-default);
+  --input: var(--color-border-default);
+  --ring: var(--color-interactive-solid);
+
+  --radius: 0.5rem;
+}
+
+/* =============================================================================
+ * DARK MODE — overrides semantic + shadcn tokens when `.dark` class or
+ * `[data-theme='dark']` is set on <html>.
+ * ============================================================================= */
+:root.dark,
+:root[data-theme='dark'] {
+  /* Surface / Background */
+  --color-bg-base: var(--black-500);
+  --color-bg-subtle: var(--black-400);
+  --color-bg-muted: var(--black-300);
+
+  /* Text */
+  --color-text-primary: var(--white-500);
+  --color-text-secondary: var(--black-20);
+  --color-text-muted: var(--black-50);
+  --color-text-inverse: var(--black-500);
+
+  /* Interactive */
+  --color-interactive-solid: var(--black-100);
+  --color-interactive-solid-hover: var(--black-50);
+  --color-interactive-solid-active: var(--black-200);
+  --color-interactive-text: var(--white-500);
+  --color-interactive-border: var(--black-300);
+  --color-interactive-bg: var(--black-400);
+
+  /* Accent */
+  --color-accent-solid: var(--pink-400);
+  --color-accent-solid-hover: var(--pink-300);
+  --color-accent-solid-active: var(--pink-500);
+  --color-accent-text: var(--pink-200);
+  --color-accent-border: var(--pink-400);
+  --color-accent-bg: var(--black-400);
+
+  /* Success */
+  --color-success-solid: var(--success-400);
+  --color-success-solid-hover: var(--success-300);
+  --color-success-text: var(--success-100);
+  --color-success-border: var(--success-500);
+  --color-success-bg: var(--success-600);
+
+  /* Error */
+  --color-error-solid: var(--error-400);
+  --color-error-solid-hover: var(--error-300);
+  --color-error-text: var(--error-100);
+  --color-error-border: var(--error-500);
+  --color-error-bg: var(--error-700);
+
+  /* Award */
+  --color-award-solid: var(--gold-400);
+  --color-award-solid-hover: var(--gold-300);
+  --color-award-text: var(--gold-100);
+  --color-award-border: var(--gold-500);
+  --color-award-bg: var(--gold-600);
+
+  /* Disabled */
+  --color-disabled-solid: var(--gray-500);
+  --color-disabled-text: var(--gray-400);
+  --color-disabled-border: var(--gray-800);
+  --color-disabled-bg: var(--gray-800);
+
+  /* Border */
+  --color-border-default: var(--black-300);
+  --color-border-strong: var(--black-200);
+
+  /* Shadcn re-mapping (tokens above already flow through Layer 3 vars) */
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-bg-subtle);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-bg-subtle);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-interactive-solid);
+  --primary-foreground: var(--color-text-inverse);
+  --secondary: var(--color-bg-muted);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-bg-muted);
+  --muted-foreground: var(--color-text-muted);
+  --accent: var(--color-accent-solid);
+  --accent-foreground: var(--color-text-inverse);
+  --destructive: var(--color-error-solid);
+  --destructive-foreground: var(--color-text-inverse);
+  --border: var(--color-border-default);
+  --input: var(--color-border-default);
+  --ring: var(--color-interactive-solid);
+}

@@ -1,12 +1,7 @@
 name: Build and Push CMS to ECR
 
 on:
-  push:
-    branches:
-      - main
-    # Bagian 'paths' dihapus agar setiap ada push ke branch main, action langsung jalan.
-    # Jika ingin tetap pakai paths, pastikan jalurnya benar (misal hapus "cms/" jika file di root)
-  workflow_dispatch: # Agar tombol manual di tab Actions tetap ada
+  workflow_dispatch: # Jalankan manual saja sampai AWS credentials siap
 
 permissions:
   contents: read

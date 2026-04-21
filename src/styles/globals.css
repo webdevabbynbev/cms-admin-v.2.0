@@ -1,0 +1,117 @@
+/* =============================================================================
+ * ABBYNBEV CMS — TAILWIND GLOBALS
+ *
+ * Tailwind v4 @theme block. Registers semantic tokens as Tailwind utilities.
+ * Consume via utility classes (e.g. bg-interactive, text-accent).
+ * ============================================================================= */
+
+@import 'tw-animate-css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =============================================================================
+ * SHADCN TOKEN REGISTRATION
+ *
+ * Registers the shadcn CSS custom properties (defined in theme.css :root and
+ * :root.dark) as Tailwind utilities. `inline` keeps `var(...)` references
+ * intact so the dark-mode cascade actually swaps colors at runtime.
+ * ============================================================================= */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@theme {
+  /* ----- Surface / Background ----- */
+  --color-bg-base: var(--color-bg-base);
+  --color-bg-subtle: var(--color-bg-subtle);
+  --color-bg-muted: var(--color-bg-muted);
+
+  /* ----- Text ----- */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-inverse: var(--color-text-inverse);
+
+  /* ----- Interactive ----- */
+  --color-interactive: var(--color-interactive-solid);
+  --color-interactive-hover: var(--color-interactive-solid-hover);
+  --color-interactive-active: var(--color-interactive-solid-active);
+  --color-interactive-fg: var(--color-text-inverse);
+  --color-interactive-border: var(--color-interactive-border);
+  --color-interactive-bg: var(--color-interactive-bg);
+
+  /* ----- Accent ----- */
+  --color-accent: var(--color-accent-solid);
+  --color-accent-hover: var(--color-accent-solid-hover);
+  --color-accent-active: var(--color-accent-solid-active);
+  --color-accent-fg: var(--color-text-inverse);
+  --color-accent-border: var(--color-accent-border);
+  --color-accent-bg: var(--color-accent-bg);
+
+  /* ----- Success ----- */
+  --color-success: var(--color-success-solid);
+  --color-success-hover: var(--color-success-solid-hover);
+  --color-success-fg: var(--color-text-inverse);
+  --color-success-border: var(--color-success-border);
+  --color-success-bg: var(--color-success-bg);
+
+  /* ----- Error ----- */
+  --color-error: var(--color-error-solid);
+  --color-error-hover: var(--color-error-solid-hover);
+  --color-error-fg: var(--color-text-inverse);
+  --color-error-border: var(--color-error-border);
+  --color-error-bg: var(--color-error-bg);
+
+  /* ----- Award (Golden) ----- */
+  --color-award: var(--color-award-solid);
+  --color-award-hover: var(--color-award-solid-hover);
+  --color-award-fg: var(--color-text-inverse);
+  --color-award-border: var(--color-award-border);
+  --color-award-bg: var(--color-award-bg);
+
+  /* ----- Disabled ----- */
+  --color-disabled: var(--color-disabled-solid);
+  --color-disabled-fg: var(--color-disabled-text);
+  --color-disabled-border: var(--color-disabled-border);
+  --color-disabled-bg: var(--color-disabled-bg);
+
+  /* ----- Border ----- */
+  --color-border: var(--color-border-default);
+  --color-border-strong: var(--color-border-strong);
+
+  /* ----- Radius ----- */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}

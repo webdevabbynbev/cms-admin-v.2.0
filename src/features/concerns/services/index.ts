@@ -1,0 +1,1 @@
+export * from './concern.service';
