@@ -221,7 +221,7 @@ const RichTextEditorComponent = ({
       <Toolbar editor={editor} />
       <EditorContent
         editor={editor}
-        className="prose prose-sm max-w-none p-4 focus:outline-none [&_.ProseMirror]:min-h-[240px] [&_.ProseMirror]:outline-none"
+        className="prose prose-sm max-w-none p-4 focus:outline-none [&_.ProseMirror]:min-h-60 [&_.ProseMirror]:outline-none"
       />
     </div>
   );

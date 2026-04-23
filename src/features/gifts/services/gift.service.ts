@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload } from '@/lib/api-types';
 import { toPaginated, type MetaPaginatedResponse } from '@/lib/meta-pagination';
 import type { GiftListQuery, GiftPayload, GiftProduct } from '../types';
 import { normalizeGiftProduct } from '../utils/normalize';

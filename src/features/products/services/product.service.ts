@@ -1,6 +1,6 @@
 import { axiosClient } from '@/config/axios';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
-  AdonisPaginatedPayload,
   ProductDetail,
   ProductListItem,
   ProductListQuery,
@@ -18,11 +18,6 @@ const PRODUCT_ENDPOINTS = {
   medias: (id: number | string) => `/admin/product/${id}/medias`,
   mediasBulk: (id: number | string) => `/admin/product/${id}/medias/bulk`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: ProductListQuery): URLSearchParams {
   const params = new URLSearchParams();

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import type {
   ProductCsvImportBackendError,
   ProductCsvImportJobStatusPayload,
-} from '../services/csv-import.service';
+} from '../types';
 
 export interface CsvImportResult {
   type: 'success' | 'warning' | 'error';

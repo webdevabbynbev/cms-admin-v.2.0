@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Tag, TagListQuery, TagPayload } from '../types';
 import { normalizeTag } from '../utils/normalize';
 
@@ -7,11 +7,6 @@ const TAG_ENDPOINTS = {
   list: '/admin/tags',
   detail: (slug: string) => `/admin/tags/${encodeURIComponent(slug)}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: TagListQuery): URLSearchParams {
   const params = new URLSearchParams();

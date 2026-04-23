@@ -6,3 +6,6 @@ export { EmptyState } from './EmptyState';
 export { ErrorState } from './ErrorState';
 export { ConfirmDialog } from './ConfirmDialog';
 export { RichTextEditor } from './RichTextEditor';
+export { SortableList } from './SortableList';
+export type { SortableItem } from './SortableList';
+export { ReorderDialog } from './ReorderDialog';

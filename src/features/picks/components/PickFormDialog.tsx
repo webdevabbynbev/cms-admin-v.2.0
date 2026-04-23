@@ -28,6 +28,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import { cn } from '@/lib/utils';
 import {
   defaultPicksFormValues,
@@ -36,10 +37,6 @@ import {
 } from '../schemas';
 import { useCreatePick, useUpdatePick } from '../hooks';
 import type { PickRecord } from '../types';
-
-interface ServeWrapper<T> {
-  serve: T;
-}
 
 interface ProductOption {
   id: number;

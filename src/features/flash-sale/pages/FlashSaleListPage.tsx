@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { ArrowUpDown, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { AppShell } from '@/layouts';
@@ -16,6 +16,7 @@ import {
 
 import {
   FlashSaleListTable,
+  FlashSaleReorderDialog,
   FlashSaleStatsCards,
 } from '../components';
 import { useFlashSales } from '../hooks';
@@ -30,6 +31,7 @@ const FlashSaleListPage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<FlashSaleStatus | 'all'>('all');
+  const [reorderOpen, setReorderOpen] = useState(false);
 
   const { data, isLoading, isError } = useFlashSales();
 
@@ -58,10 +60,16 @@ const FlashSaleListPage = () => {
           title="Flash Sale"
           description={`Kelola flash sale. ${data?.length ?? 0} total.`}
           actions={
-            <Button onClick={handleAdd}>
-              <Plus className="h-4 w-4" />
-              Tambah Flash Sale
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => setReorderOpen(true)}>
+                <ArrowUpDown className="h-4 w-4" />
+                Atur Urutan
+              </Button>
+              <Button onClick={handleAdd}>
+                <Plus className="h-4 w-4" />
+                Tambah Flash Sale
+              </Button>
+            </div>
           }
         />
 
@@ -98,6 +106,8 @@ const FlashSaleListPage = () => {
           isError={isError}
           onEdit={handleEdit}
         />
+
+        <FlashSaleReorderDialog open={reorderOpen} onOpenChange={setReorderOpen} />
       </PageContainer>
     </AppShell>
   );

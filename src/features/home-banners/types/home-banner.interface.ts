@@ -17,3 +17,7 @@ export interface HomeBannerSectionPayload {
   name: string;
   order?: number;
 }
+
+export interface HomeBannerSectionReorderPayload {
+  updates: Array<{ id: number; order: number }>;
+}

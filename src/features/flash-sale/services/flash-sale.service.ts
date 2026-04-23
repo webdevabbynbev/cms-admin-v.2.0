@@ -1,4 +1,5 @@
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import type {
   FlashSale,
   FlashSaleFormPayload,
@@ -11,11 +12,6 @@ const FLASH_SALE_ENDPOINTS = {
   detail: (id: number | string) => `/admin/flashsales/${id}`,
   reorder: '/admin/flashsales/update-order',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 export const flashSaleService = {
   async list(): Promise<FlashSale[]> {

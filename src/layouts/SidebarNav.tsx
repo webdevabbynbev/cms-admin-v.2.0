@@ -1,4 +1,4 @@
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
@@ -19,18 +19,40 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/features/auth';
+import type { AuthPermissions } from '@/features/auth/types';
+import { UserRole } from '@/features/auth/types/auth.enum';
+
+interface PermContext {
+  permissions: AuthPermissions | null;
+  isAdmin: boolean;
+}
+
+type PermPredicate = (ctx: PermContext) => boolean;
 
 interface NavItem {
   label: string;
   path: string;
   icon?: LucideIcon;
+  requires?: PermPredicate;
 }
 
 interface NavGroup {
   label: string;
   icon: LucideIcon;
   items: NavItem[];
+  requires?: PermPredicate;
 }
+
+const adminOnly: PermPredicate = (ctx) => ctx.isAdmin;
+const requireAnalytics: PermPredicate = (ctx) =>
+  ctx.isAdmin || Boolean(ctx.permissions?.can_view_analytics);
+const requireProductMgmt: PermPredicate = (ctx) =>
+  ctx.isAdmin || Boolean(ctx.permissions?.can_manage_products);
+const requireStockMgmt: PermPredicate = (ctx) =>
+  ctx.isAdmin || Boolean(ctx.permissions?.can_manage_stock);
+const requireUserMgmt: PermPredicate = (ctx) =>
+  ctx.isAdmin || Boolean(ctx.permissions?.can_manage_users);
 
 const NAV_GROUPS: NavGroup[] = [
   {
@@ -41,6 +63,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Catalog',
     icon: Package,
+    requires: requireProductMgmt,
     items: [
       { label: 'Produk', path: '/products-new' },
       { label: 'Banner', path: '/banners-new' },
@@ -56,6 +79,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Inventory',
     icon: Package,
+    requires: requireStockMgmt,
     items: [
       { label: 'Stock Movement', path: '/stock-movements-new' },
       { label: 'Inventory Product', path: '/reports-new/inventory' },
@@ -64,6 +88,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Master Data',
     icon: Package,
+    requires: requireProductMgmt,
     items: [
       { label: 'Concern', path: '/concerns-new' },
       { label: 'Concern Options', path: '/concern-options-new' },
@@ -74,6 +99,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Picks',
     icon: Star,
+    requires: requireProductMgmt,
     items: [
       { label: 'Abby Picks', path: '/abby-picks-new' },
       { label: 'Bev Picks', path: '/bev-picks-new' },
@@ -83,6 +109,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Marketing',
     icon: Percent,
+    requires: requireProductMgmt,
     items: [
       { label: 'Diskon', path: '/discounts-new', icon: Percent },
       { label: 'Voucher', path: '/vouchers-new', icon: Ticket },
@@ -97,6 +124,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Ramadan Event',
     icon: Zap,
+    requires: requireProductMgmt,
     items: [
       { label: 'Spin Prizes', path: '/ramadan-spin-prizes-new' },
       { label: 'Recommendations', path: '/ramadan-recommendations-new' },
@@ -107,6 +135,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Reports',
     icon: BarChart3,
+    requires: requireAnalytics,
     items: [
       { label: 'Dashboard', path: '/reports-new/dashboard' },
       { label: 'Penjualan', path: '/reports-new/sales' },
@@ -120,6 +149,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Abeauties Squad',
     icon: Users,
+    requires: requireUserMgmt,
     items: [{ label: 'Pendaftar', path: '/abeauties-squad-new' }],
   },
   {
@@ -130,6 +160,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'CRM',
     icon: Users,
+    requires: requireUserMgmt,
     items: [
       { label: 'Customer', path: '/customers-new' },
       { label: 'Supabase Users', path: '/supabase-users-new' },
@@ -141,6 +172,7 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'Content',
     icon: FileText,
+    requires: adminOnly,
     items: [
       { label: 'FAQ', path: '/faqs-new', icon: HelpCircle },
       { label: 'Privacy Policy', path: '/privacy-policy-new' },
@@ -153,10 +185,11 @@ const NAV_GROUPS: NavGroup[] = [
   {
     label: 'System',
     icon: Settings,
+    requires: adminOnly,
     items: [
-      { label: 'Admin Management', path: '/admins-new', icon: Shield },
-      { label: 'Settings', path: '/settings-new', icon: Settings },
-      { label: 'Activity Log', path: '/activity-logs-new', icon: History },
+      { label: 'Admin Management', path: '/admins-new', icon: Shield, requires: adminOnly },
+      { label: 'Settings', path: '/settings-new', icon: Settings, requires: adminOnly },
+      { label: 'Activity Log', path: '/activity-logs-new', icon: History, requires: adminOnly },
     ],
   },
 ];
@@ -172,7 +205,7 @@ const GroupBlock = ({ group }: GroupBlockProps) => {
   );
   const [open, setOpen] = useState(hasActiveChild);
   const Icon = group.icon;
-  const isSingle = group.items.length === 1 && group.items[0].path;
+  const isSingle = group.items.length === 1;
 
   if (isSingle) {
     const item = group.items[0];
@@ -244,12 +277,36 @@ const GroupBlock = ({ group }: GroupBlockProps) => {
   );
 };
 
-const SidebarNavComponent = () => (
-  <div className="flex flex-col gap-1">
-    {NAV_GROUPS.map((group) => (
-      <GroupBlock key={group.label} group={group} />
-    ))}
-  </div>
-);
+const SidebarNavComponent = () => {
+  const { user, permissions } = useAuth();
+
+  const ctx: PermContext = useMemo(
+    () => ({
+      permissions,
+      isAdmin:
+        Boolean(permissions?.is_admin) || user?.role === UserRole.Administrator,
+    }),
+    [user?.role, permissions],
+  );
+
+  const visibleGroups = useMemo(() => {
+    return NAV_GROUPS.map((group) => {
+      if (group.requires && !group.requires(ctx)) return null;
+      const items = group.items.filter(
+        (item) => !item.requires || item.requires(ctx),
+      );
+      if (items.length === 0) return null;
+      return { ...group, items };
+    }).filter((g): g is NavGroup => g !== null);
+  }, [ctx]);
+
+  return (
+    <div className="flex flex-col gap-1">
+      {visibleGroups.map((group) => (
+        <GroupBlock key={group.label} group={group} />
+      ))}
+    </div>
+  );
+};
 
 export const SidebarNav = memo(SidebarNavComponent);

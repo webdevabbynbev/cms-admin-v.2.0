@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { StockMovement, StockMovementListQuery, StockAdjustmentPayload } from '../types';
 import { normalizeStockMovement } from '../utils/normalize';
 
@@ -8,11 +8,6 @@ const EP = {
   adjust: '/admin/stock-movements/adjust',
   receive: (id: number | string) => `/admin/stock-movements/${id}/receive`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: StockMovementListQuery): URLSearchParams {
   const params = new URLSearchParams();

@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { CrmAffiliate, CrmListQuery, CrmMember } from '../types';
 import { normalizeAffiliate, normalizeMember } from '../utils/normalize';
 
@@ -7,11 +7,6 @@ const EP = {
   members: '/admin/crm/members',
   affiliate: '/admin/crm/affiliate',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: CrmListQuery): URLSearchParams {
   const params = new URLSearchParams();

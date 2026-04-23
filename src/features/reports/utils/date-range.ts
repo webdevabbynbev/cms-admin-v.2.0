@@ -1,12 +1,8 @@
 import moment from 'moment-timezone';
 import { WIB_TZ } from '@/utils/timezone';
-import { DateRangePreset } from '../types';
+import { DateRangePreset, type DateRangeValue } from '../types';
 
-export interface DateRangeValue {
-  preset: DateRangePreset;
-  startIso: string;
-  endIso: string;
-}
+export type { DateRangeValue };
 
 export function buildRangeFromPreset(
   preset: Exclude<DateRangePreset, DateRangePreset.Custom>,

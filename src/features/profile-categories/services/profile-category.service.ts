@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   ProfileCategory,
   ProfileCategoryListQuery,
@@ -19,11 +19,6 @@ const PROFILE_CATEGORY_ENDPOINTS = {
   optionList: '/admin/profile-category-options',
   optionDetail: (id: number | string) => `/admin/profile-category-options/${id}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildCategoryParams(
   filters: ProfileCategoryListQuery,

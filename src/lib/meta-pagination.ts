@@ -1,4 +1,4 @@
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload } from './api-types';
 
 /**
  * Some backend endpoints return `{ meta: {...}, data: [...] }` instead of

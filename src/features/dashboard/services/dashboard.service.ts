@@ -1,4 +1,5 @@
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import type {
   DashboardStats,
   ProductSummary,
@@ -16,11 +17,6 @@ const DASHBOARD_ENDPOINTS = {
   userRegistrationPeriod: '/admin/total-register-user-period',
   traffic: '/admin/traffic-dashboard',
 } as const;
-
-interface ServeWrapper<T> {
-  serve: T;
-  message?: string;
-}
 
 function unwrapServe<T>(data: ServeWrapper<T>): T {
   return data.serve;

@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import { toPaginated, type MetaPaginatedResponse } from '@/lib/meta-pagination';
 import type {
   RamadanListQuery,
@@ -28,11 +28,6 @@ const EP = {
     `/admin/ramadan-recommendation-banners/${id}`,
   participantList: '/admin/ramadan-participants',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: RamadanListQuery): URLSearchParams {
   const params = new URLSearchParams();

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/query-keys.constant';
-import { bannerService, type BannerFormPayload } from '../services';
-import type { BannerListQuery } from '../types';
+import { bannerService } from '../services';
+import type { BannerFormPayload, BannerListQuery } from '../types';
 
 export const useBanners = (filters: BannerListQuery) => {
   return useQuery({

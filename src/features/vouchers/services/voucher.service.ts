@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   Voucher,
   VoucherFormPayload,
@@ -14,11 +14,6 @@ const VOUCHER_ENDPOINTS = {
   status: '/admin/voucher/status',
   visibility: '/admin/voucher/visibility',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: VoucherListQuery): URLSearchParams {
   const params = new URLSearchParams();

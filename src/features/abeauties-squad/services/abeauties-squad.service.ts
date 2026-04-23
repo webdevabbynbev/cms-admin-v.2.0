@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   AbeautiesSquadListQuery,
   AbeautiesSquadMember,
@@ -11,11 +11,6 @@ const EP = {
   list: '/admin/abeauty-squad',
   status: (id: number | string) => `/admin/abeauty-squad/${id}/status`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: AbeautiesSquadListQuery): URLSearchParams {
   const params = new URLSearchParams();

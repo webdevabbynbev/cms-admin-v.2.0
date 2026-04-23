@@ -1,21 +1,18 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   HomeBannerSection,
   HomeBannerSectionListQuery,
   HomeBannerSectionPayload,
+  HomeBannerSectionReorderPayload,
 } from '../types';
 import { normalizeSection } from '../utils/normalize';
 
 const EP = {
   sections: '/admin/home-banners/sections',
   sectionDetail: (id: number | string) => `/admin/home-banners/sections/${id}`,
+  sectionsReorder: '/admin/home-banners/sections/update-order',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: HomeBannerSectionListQuery): URLSearchParams {
   const params = new URLSearchParams();
@@ -63,5 +60,9 @@ export const homeBannerService = {
 
   async removeSection(id: number | string): Promise<void> {
     await axiosClient.delete(EP.sectionDetail(id));
+  },
+
+  async reorderSections(payload: HomeBannerSectionReorderPayload): Promise<void> {
+    await axiosClient.post(EP.sectionsReorder, payload);
   },
 };

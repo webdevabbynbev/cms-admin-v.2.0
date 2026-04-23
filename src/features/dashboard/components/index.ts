@@ -7,3 +7,4 @@ export { TrafficChart } from './TrafficChart';
 export { TopProductsTable } from './TopProductsTable';
 export { TopCustomersTable } from './TopCustomersTable';
 export { LowStockTable } from './LowStockTable';
+export { AbandonedCartTable } from './AbandonedCartTable';

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import {
@@ -77,7 +77,7 @@ const CsvArrayInput = ({ label, name, placeholder, description }: CsvInputProps)
   );
 };
 
-export const VariantDetailDialog = ({
+const VariantDetailDialogComponent = ({
   index,
   open,
   onOpenChange,
@@ -282,3 +282,5 @@ export const VariantDetailDialog = ({
     </Dialog>
   );
 };
+
+export const VariantDetailDialog = memo(VariantDetailDialogComponent);

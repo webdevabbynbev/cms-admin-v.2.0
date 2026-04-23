@@ -1,16 +1,11 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { ActivityLog, ActivityLogListQuery } from '../types';
 import { normalizeActivityLog } from '../utils/normalize';
 
 const ACTIVITY_LOG_ENDPOINTS = {
   list: '/admin/activity-logs',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: ActivityLogListQuery): URLSearchParams {
   const params = new URLSearchParams();

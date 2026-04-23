@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   Discount,
   DiscountBrandOption,
@@ -33,11 +33,6 @@ const DISCOUNT_ENDPOINTS = {
   optionProducts: '/admin/discount-options/products',
   optionVariants: '/admin/discount-options/product-variants',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: DiscountListQuery): URLSearchParams {
   const params = new URLSearchParams();

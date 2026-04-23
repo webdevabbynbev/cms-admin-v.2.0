@@ -1,4 +1,5 @@
 import type {
+  DateRangePreset,
   ReportChannel,
   ReportFormat,
   ReportPeriod,
@@ -206,3 +207,16 @@ export type TransactionReport = Report<
   TransactionReportData,
   TransactionReportSummary
 >;
+
+export interface DateRangeValue {
+  preset: DateRangePreset;
+  startIso: string;
+  endIso: string;
+}
+
+export interface ReportSummaryCard {
+  label: string;
+  value: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  helper?: string;
+}

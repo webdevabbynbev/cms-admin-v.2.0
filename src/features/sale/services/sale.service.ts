@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Sale, SaleDetail, SaleListQuery, SalePayload } from '../types';
 import { normalizeSale, normalizeSaleDetail } from '../utils/normalize';
 
@@ -7,11 +7,6 @@ const EP = {
   list: '/admin/sales',
   detail: (id: number | string) => `/admin/sales/${id}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: SaleListQuery): URLSearchParams {
   const params = new URLSearchParams();

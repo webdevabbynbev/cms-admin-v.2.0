@@ -139,6 +139,7 @@ export const productFormSchema = z
     meta_title: z.string().max(255),
     meta_description: z.string().max(500),
     meta_keywords: z.string().max(500),
+    meta_ai: z.boolean(),
   })
   .superRefine((data, ctx) => {
     if (!data.has_variants) return;
@@ -221,4 +222,5 @@ export const defaultProductFormValues: ProductFormValues = {
   meta_title: '',
   meta_description: '',
   meta_keywords: '',
+  meta_ai: false,
 };

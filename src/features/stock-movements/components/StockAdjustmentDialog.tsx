@@ -38,13 +38,13 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import { cn } from '@/lib/utils';
 import { useCreateStockAdjustment } from '../hooks';
 
 // ── types ────────────────────────────────────────────────────────────────────
 interface ProductOption { id: number; name: string; }
 interface VariantOption { id: number; sku: string | null; barcode: string | null; label: string; stock: number; }
-interface ServeWrapper<T> { serve: T; }
 
 // ── product search ────────────────────────────────────────────────────────────
 function useProductSearch(q: string) {

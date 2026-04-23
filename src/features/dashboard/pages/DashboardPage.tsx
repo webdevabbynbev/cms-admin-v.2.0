@@ -8,6 +8,7 @@ import {
   TopProductsTable,
   TopCustomersTable,
   LowStockTable,
+  AbandonedCartTable,
 } from '../components';
 
 const DashboardPage = () => {
@@ -33,6 +34,8 @@ const DashboardPage = () => {
           <TopCustomersTable />
           <LowStockTable />
         </div>
+
+        <AbandonedCartTable />
       </PageContainer>
     </AppShell>
   );

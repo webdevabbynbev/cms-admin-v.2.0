@@ -1,16 +1,11 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Customer, CustomerListQuery } from '../types';
 import { normalizeCustomer } from '../utils/normalize';
 
 const CUSTOMER_ENDPOINTS = {
   list: '/admin/customers',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: CustomerListQuery): URLSearchParams {
   const params = new URLSearchParams();

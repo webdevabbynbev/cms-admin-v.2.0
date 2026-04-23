@@ -1,9 +1,4 @@
-import { DISCOUNT_ALL_PRODUCTS_MARKER } from '../types';
-
-export interface AllProductsMarkerInfo {
-  percent: number | null;
-  maxDiscount: number | null;
-}
+import { DISCOUNT_ALL_PRODUCTS_MARKER, type AllProductsMarkerInfo } from '../types';
 
 export function isAllProductsDiscount(
   description: string | null | undefined,

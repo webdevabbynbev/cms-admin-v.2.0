@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   Admin,
   AdminCreatePayload,
@@ -12,11 +12,6 @@ const ADMIN_ENDPOINTS = {
   list: '/admin/users',
   detail: (id: number | string) => `/admin/users/${id}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: AdminListQuery): URLSearchParams {
   const params = new URLSearchParams();

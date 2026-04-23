@@ -40,3 +40,7 @@ export interface PickUpdatePayload {
   start_date: string | null;
   end_date: string | null;
 }
+
+export interface PickReorderPayload {
+  updates: Array<{ id: number; order: number }>;
+}

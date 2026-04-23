@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Faq, FaqListQuery, FaqPayload } from '../types';
 import { normalizeFaq } from '../utils/normalize';
 
@@ -7,11 +7,6 @@ const FAQ_ENDPOINTS = {
   list: '/admin/faq',
   detail: (id: number | string) => `/admin/faq/${id}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: FaqListQuery): URLSearchParams {
   const params = new URLSearchParams();

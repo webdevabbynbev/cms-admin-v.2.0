@@ -1,7 +1,8 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload } from '@/lib/api-types';
 import type {
   Banner,
+  BannerFormPayload,
   BannerListQuery,
   BannerReorderPayload,
 } from '../types';
@@ -30,18 +31,6 @@ function normalizeBanner(raw: RawBanner): Banner {
     return (raw as { $attributes: Banner }).$attributes;
   }
   return raw as Banner;
-}
-
-export interface BannerFormPayload {
-  title: string;
-  description: string;
-  position: string;
-  banner_type: string;
-  has_button: boolean;
-  button_text?: string;
-  button_url?: string;
-  image_file?: File | null;
-  image_mobile_file?: File | null;
 }
 
 function toFormData(payload: BannerFormPayload): FormData {

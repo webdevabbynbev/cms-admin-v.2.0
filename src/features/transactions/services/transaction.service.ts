@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Transaction, TransactionListQuery } from '../types';
 import { normalizeTransaction } from '../utils/normalize';
 
@@ -7,11 +7,6 @@ const EP = {
   list: '/admin/transactions',
   detail: (id: number | string) => `/admin/transactions/${id}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: TransactionListQuery): URLSearchParams {
   const params = new URLSearchParams();

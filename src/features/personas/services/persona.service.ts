@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Persona, PersonaListQuery, PersonaPayload } from '../types';
 import { normalizePersona } from '../utils/normalize';
 
@@ -7,11 +7,6 @@ const PERSONA_ENDPOINTS = {
   list: '/admin/personas',
   detail: (slug: string) => `/admin/personas/${encodeURIComponent(slug)}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: PersonaListQuery): URLSearchParams {
   const params = new URLSearchParams();

@@ -25,3 +25,15 @@ export interface BannerListQuery {
 export interface BannerReorderPayload {
   updates: Array<{ id: number; order: number }>;
 }
+
+export interface BannerFormPayload {
+  title: string;
+  description: string;
+  position: string;
+  banner_type: string;
+  has_button: boolean;
+  button_text?: string;
+  button_url?: string;
+  image_file?: File | null;
+  image_mobile_file?: File | null;
+}

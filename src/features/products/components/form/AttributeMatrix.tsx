@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useFieldArray, useFormContext, useWatch } from 'react-hook-form';
-import { Plus, Trash2, Wand2 } from 'lucide-react';
+import { Plus, Settings2, Trash2, Wand2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -20,6 +20,7 @@ import type {
   VariantFormValues,
 } from '../../schemas';
 import { defaultVariantFormValues } from '../../schemas';
+import { AttributeManagerDialog } from './AttributeManagerDialog';
 
 function cartesianProduct<T>(arrs: T[][]): T[][] {
   if (arrs.length === 0) return [];
@@ -32,6 +33,7 @@ function cartesianProduct<T>(arrs: T[][]): T[][] {
 export const AttributeMatrix = () => {
   const form = useFormContext<ProductFormValues>();
   const { data: allAttributes = [] } = useAttributes();
+  const [managerOpen, setManagerOpen] = useState(false);
 
   const { fields, append, remove, update } = useFieldArray({
     control: form.control,
@@ -41,7 +43,6 @@ export const AttributeMatrix = () => {
   const attributes = useWatch({ control: form.control, name: 'attributes' });
   const existingVariants = useWatch({ control: form.control, name: 'variants' });
 
-  // Hide attribute ids already chosen in other rows so user can't duplicate.
   const takenAttributeIds = useMemo(
     () =>
       new Set(
@@ -93,7 +94,6 @@ export const AttributeMatrix = () => {
       const combination = combo.map((c) => c.value);
       const display = combo.map((c) => c.label);
 
-      // Preserve existing variant data if combination matches
       const match = existingVariants?.find(
         (v) =>
           v.combination.length === combination.length &&
@@ -127,14 +127,24 @@ export const AttributeMatrix = () => {
             Tambah atribut (misal: Ukuran, Warna) lalu pilih nilainya. Klik &quot;Generate&quot; untuk membuat kombinasi variant.
           </p>
         </div>
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => append({ attribute_id: null, values: [] })}
-        >
-          <Plus className="h-4 w-4" /> Tambah Atribut
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => setManagerOpen(true)}
+          >
+            <Settings2 className="h-4 w-4" /> Kelola
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => append({ attribute_id: null, values: [] })}
+          >
+            <Plus className="h-4 w-4" /> Tambah Atribut
+          </Button>
+        </div>
       </div>
 
       {fields.length === 0 ? (
@@ -185,11 +195,22 @@ export const AttributeMatrix = () => {
                 </div>
 
                 {selectedAttr ? (
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap items-center gap-1.5">
                     {selectedAttr.values.length === 0 ? (
-                      <span className="text-xs text-muted-foreground">
-                        Atribut ini belum punya nilai. Tambah via halaman Master Data.
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">
+                          Atribut ini belum punya nilai.
+                        </span>
+                        <Button
+                          type="button"
+                          variant="link"
+                          size="sm"
+                          className="h-auto px-0 text-xs"
+                          onClick={() => setManagerOpen(true)}
+                        >
+                          Tambah nilai
+                        </Button>
+                      </div>
                     ) : (
                       selectedAttr.values.map((v) => {
                         const isSelected = row?.values.some(
@@ -229,6 +250,8 @@ export const AttributeMatrix = () => {
           </Button>
         </div>
       )}
+
+      <AttributeManagerDialog open={managerOpen} onOpenChange={setManagerOpen} />
     </div>
   );
 };

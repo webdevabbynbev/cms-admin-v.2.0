@@ -4,4 +4,6 @@ export { FlashSaleVariantsTable } from './FlashSaleVariantsTable';
 export { FlashSaleBulkActionsCard } from './FlashSaleBulkActionsCard';
 export { FlashSaleAddItemsCard } from './FlashSaleAddItemsCard';
 export { FlashSaleProductPickerDialog } from './FlashSaleProductPickerDialog';
+export { FlashSaleVariantPickerDialog } from './FlashSaleVariantPickerDialog';
+export { FlashSaleBrandPickerDialog } from './FlashSaleBrandPickerDialog';
 export { FlashSaleFormActions } from './FlashSaleFormActions';

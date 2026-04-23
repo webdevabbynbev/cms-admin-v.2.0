@@ -155,3 +155,8 @@ export interface DiscountListFilters {
   page: number;
   perPage: number;
 }
+
+export interface AllProductsMarkerInfo {
+  percent: number | null;
+  maxDiscount: number | null;
+}

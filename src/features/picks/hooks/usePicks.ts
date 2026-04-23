@@ -6,7 +6,12 @@ import {
 } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/query-keys.constant';
 import { picksService } from '../services';
-import type { PickListQuery, PickPayload, PickUpdatePayload } from '../types';
+import type {
+  PickListQuery,
+  PickPayload,
+  PickReorderPayload,
+  PickUpdatePayload,
+} from '../types';
 
 export const usePicks = (endpoint: string, filters: PickListQuery) =>
   useQuery({
@@ -40,6 +45,17 @@ export const useDeletePick = (endpoint: string) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: number) => picksService.remove(endpoint, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.picks.root(endpoint) });
+    },
+  });
+};
+
+export const useReorderPicks = (endpoint: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: PickReorderPayload) =>
+      picksService.reorder(endpoint, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.picks.root(endpoint) });
     },

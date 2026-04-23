@@ -106,6 +106,7 @@ export function buildProductPayload(
     meta_title: values.meta_title,
     meta_description: values.meta_description,
     meta_keywords: values.meta_keywords,
+    meta_ai: values.meta_ai,
     variants: variantsPayload,
   };
 }
@@ -245,5 +246,6 @@ export function productDetailToFormValues(detail: ProductDetail): ProductFormVal
     meta_title: detail.metaTitle ?? '',
     meta_description: detail.metaDescription ?? '',
     meta_keywords: detail.metaKeywords ?? '',
+    meta_ai: Boolean(detail.metaAi),
   };
 }

@@ -1,14 +1,8 @@
 import { useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import type { CategoryType } from '../types';
+import type { CategoryFlags, CategoryType } from '../types';
 import type { ProductFormValues } from '../schemas';
 import { useCategoryTypes } from '../hooks';
-
-export interface CategoryFlags {
-  isMakeup: boolean;
-  isPerfume: boolean;
-  isSkincare: boolean;
-}
 
 function flattenCategoryLabels(
   categories: CategoryType[],

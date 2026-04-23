@@ -1,10 +1,6 @@
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import type { ContentDocument, ContentPayload, ContentSlug } from '../types';
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 export const contentService = {
   async get(slug: ContentSlug): Promise<ContentDocument> {

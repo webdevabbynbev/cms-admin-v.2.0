@@ -1,13 +1,14 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import { toPaginated, type MetaPaginatedResponse } from '@/lib/meta-pagination';
-import type { PickRecord, PickListQuery, PickPayload, PickUpdatePayload } from '../types';
+import type {
+  PickRecord,
+  PickListQuery,
+  PickPayload,
+  PickReorderPayload,
+  PickUpdatePayload,
+} from '../types';
 import { normalizePickRecord } from '../utils/normalize';
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: PickListQuery): URLSearchParams {
   const params = new URLSearchParams();
@@ -51,5 +52,9 @@ export const picksService = {
 
   async remove(endpoint: string, id: number): Promise<void> {
     await axiosClient.delete(`${endpoint}/${id}`);
+  },
+
+  async reorder(endpoint: string, payload: PickReorderPayload): Promise<void> {
+    await axiosClient.post(`${endpoint}/update-order`, payload);
   },
 };

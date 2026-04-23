@@ -67,7 +67,7 @@ class ErrorBoundary extends Component<Props, State> {
             {config.enableDebugLogging && this.state.error ? (
               <div className="w-full rounded-md border border-border bg-muted p-3 text-left">
                 <p className="text-xs font-semibold text-destructive">Error Details:</p>
-                <p className="mt-1 break-words font-mono text-xs text-foreground">
+                <p className="mt-1 wrap-break-word font-mono text-xs text-foreground">
                   {this.state.error.message}
                 </p>
                 {this.state.errorInfo ? (

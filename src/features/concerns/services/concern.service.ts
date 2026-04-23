@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
   Concern,
   ConcernListQuery,
@@ -17,11 +17,6 @@ const CONCERN_ENDPOINTS = {
   optionDetail: (slug: string) =>
     `/admin/concern-options/${encodeURIComponent(slug)}`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildConcernParams(filters: ConcernListQuery): URLSearchParams {
   const params = new URLSearchParams();

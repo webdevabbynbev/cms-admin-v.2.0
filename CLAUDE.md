@@ -1,8 +1,8 @@
 # CMS Admin — Abby n Bev
 
-E-commerce CMS admin panel. Mid-migration from v1 (Ant Design) → v1.5 (Shadcn + Tailwind).
+E-commerce CMS admin panel. v1.5 migration complete (Shadcn + Tailwind 4, no more Ant Design).
 
-## Stack (v1.5 mandatory)
+## Stack
 
 - TypeScript + React 18 (function components)
 - Vite + SWC
@@ -12,6 +12,7 @@ E-commerce CMS admin panel. Mid-migration from v1 (Ant Design) → v1.5 (Shadcn 
 - `react-router-dom` via `createHashRouter` (URLs are `/#/path`)
 - Axios via `@/config/axios` (auto-attaches bearer token from Zustand auth store)
 - Tiptap (rich text), Recharts (charts), moment-timezone (WIB date handling)
+- Sonner (toast), Lucide (icons)
 
 ## Commands
 
@@ -28,34 +29,42 @@ No ESLint pre-commit. Just ensure `tsc` clean.
 
 ```
 src/
-  features/           # v1.5 feature modules (26+ features, all code-complete)
+  App.tsx              # compose root (theme effect + init + providers + router)
+  main.tsx             # StrictMode + App
+  features/            # 37 feature modules
     <feature>/
-      types/          # interface + enum
-      services/       # axios calls, normalizers
-      hooks/          # useQuery / useMutation
-      schemas/        # Zod form schemas
-      utils/          # normalize, formatters
-      components/     # feature-specific UI
-      pages/          # route-level pages
-      index.ts        # barrel
+      types/           # interface + enum (single source of truth for shapes)
+      services/        # axios calls
+      hooks/           # useQuery / useMutation
+      schemas/         # Zod form schemas
+      utils/           # normalize, formatters, feature-specific helpers
+      stores/          # zustand (rare, e.g. products/csv-import)
+      components/
+      pages/
+      index.ts         # barrel
   components/
-    common/           # shared shadcn-based (PageContainer, DataTable, ConfirmDialog, RichTextEditor, etc.)
-    ui/               # shadcn-generated primitives
-  layouts/            # AppShell + SidebarNav + HeaderActions + MainLayout (v1.5)
-  layout/             # legacy Ant Design layout (still used by /MasterPage old routes)
-  config/             # axios, etc.
-  constants/          # QUERY_KEYS
-  stores/             # Zustand (auth)
-  hooks/              # legacy + some shared (useThemeStore)
-  lib/                # utilities (cn, meta-pagination helper)
-  pages/              # legacy v1 pages (not v1.5)
-  components/(Forms|Tables|Transaction|Charts|Uploads|Panels|Report)/  # legacy v1 - do not import from features
+    common/            # PageContainer, PageHeader, DataTable, ConfirmDialog,
+                       # RichTextEditor, SortableList, ReorderDialog,
+                       # LoadingState, EmptyState, ErrorState
+    ui/                # shadcn-generated primitives
+    ErrorBoundary/
+  config/              # axios, query-client
+  constants/           # QUERY_KEYS, countries, uploadPaths
+  layouts/             # AppShell, MainLayout, SidebarNav, HeaderActions,
+                       # ChangePasswordDialog, FullLayout
+  lib/                 # cn (utils.ts), meta-pagination, axios-error
+  providers/           # AppProviders (QueryClient + Tooltip + ErrorBoundary + Toaster + Devtools)
+  router/              # createHashRouter + lazy route definitions + legacy redirects
+  stores/              # zustand root-level (auth.store, theme.store)
+  styles/              # theme.css, globals.css
+  types/               # (empty / reserved)
+  utils/               # timezone, env, analytics/, pwa/
 ```
 
 **Rules:**
-- v1.5 features NEVER import from `components/Forms|Tables|etc.`, `api/`, `services/api/`, `utils/helper`, `layout/` (old)
-- Legacy v1 still alive at old routes (wrapped by `src/pages/MasterPage.tsx`)
-- URLs with `-new` suffix are v1.5 routes (e.g. `/discounts-new`, `/tags-new`)
+- Interfaces & enums live in `features/<x>/types/` — not in services, utils, or components.
+- Components export their own prop interfaces locally; promote to `types/` if used cross-file.
+- Zustand state-shape interfaces stay with the store.
 
 ## API conventions
 
@@ -69,7 +78,8 @@ src/
   - `/admin/referral-codes`
   - Handled via `src/lib/meta-pagination.ts` helper (`toPaginated()`)
 - Pagination (Adonis standard): `{data, total, perPage, currentPage, lastPage, firstPage}`
-- Normalizer utilities: each feature has `utils/normalize.ts` that handles camelCase/snake_case ambiguity
+- Reorder endpoints follow `POST /admin/<resource>/update-order` with `{ updates: [{id, order}] }`.
+- Axios errors: use `extractAxiosErrorMessage(err, fallback)` from `@/lib/axios-error`.
 - Known endpoint quirks: see `memory/project_api_quirks.md`
 
 ## Naming + patterns
@@ -77,11 +87,13 @@ src/
 - **Slug vs ID for CRUD detail URL**: Brand/Tag/Persona/CategoryTypes/Concern use `slug`. ProfileCategory/Settings/FAQ/Admin/Ramadan/etc. use numeric `id`.
 - **Payload casing**: usually snake_case on wire (`started_at`), camelCase in TypeScript interfaces (`startedAt`). Services convert.
 - **Datetime**: API returns ISO with `+07:00`. Form inputs use `datetime-local` (YYYY-MM-DDTHH:mm). Use `moment-timezone` with `WIB_TZ` for conversion (see `@/utils/timezone`).
+- **Permission-gated sidebar**: `src/layouts/SidebarNav.tsx` uses `PermPredicate` per group/item — fail-open (undefined predicate = show). Admin bypasses all gates via `isAdmin`.
 
 ## AppShell usage
 
 ```tsx
 import { AppShell } from '@/layouts';
+import { PageContainer, PageHeader } from '@/components/common';
 
 const MyPage = () => (
   <AppShell>
@@ -93,27 +105,33 @@ const MyPage = () => (
 );
 ```
 
-AppShell provides: left sidebar (`SidebarNav`) + top header (`HeaderActions` with profile + theme toggle). Don't use legacy `src/layout/MainLayout` in v1.5 code.
+AppShell provides: left sidebar (`SidebarNav`) + top header (`HeaderActions` with profile + theme toggle + change-password dialog).
+
+## Shared UI components
+
+- **`DataTable`** — Tanstack Table + pagination, supports `manualPagination` for server-side paging.
+- **`ReorderDialog<T>`** — generic reorder dialog (used by Picks, Home Banner, Flash Sale list reorder).
+- **`SortableList<T>`** — native HTML5 drag sortable list primitive.
+- **`ConfirmDialog`** — destructive action confirmation.
+- **`RichTextEditor`** — Tiptap wrapper.
 
 ## Adding a new feature checklist
 
-1. `src/features/<name>/types/` — interface + list query + payload
+1. `src/features/<name>/types/` — interface + enum
 2. `src/features/<name>/utils/normalize.ts` — shape the API response
 3. `src/features/<name>/services/<name>.service.ts` — axios CRUD
 4. `src/features/<name>/hooks/use<Name>.ts` — Tanstack Query wrappers
 5. `src/features/<name>/schemas/<name>-form.schema.ts` — Zod (if form)
 6. `src/features/<name>/components/` — ListTable + FormDialog
 7. `src/features/<name>/pages/<Name>ListPage.tsx` — wrapped in `<AppShell>`
-8. Wire lazy import + Route in `src/App.tsx`
-9. Add entry to `SidebarNav.tsx` + `QUERY_KEYS` constant
+8. Add lazy import + Route in `src/router/index.tsx` (use `protectedRoute(path, Component)` helper)
+9. Add entry to `SidebarNav.tsx` (with optional `requires` predicate) + `QUERY_KEYS` constant
 10. Run `npx tsc --noEmit` and `node scripts/smoke-test-v15.mjs`
 
 ## Smoke test
 
-`scripts/smoke-test-v15.mjs` hits all 47 GET endpoints + 5 async report runs. Run before asking user to UI-test. All checks must pass before cleanup (Phase 6).
+`scripts/smoke-test-v15.mjs` hits all GET endpoints + async report runs. Run before asking user to UI-test.
 
-## Status: v1.5 migration
+## Status
 
-Phase 3 + 4 + 5 all batches done. 26+ features migrated. See `memory/project_v15_progress.md` for full feature table + deferred sub-features (drag-drop, CSV imports, picker dialogs, chart detail modals, etc.).
-
-Next: Phase 6 — user UI-tests, then delete legacy (`src/pages/MasterPage.tsx`, `src/layout/`, `src/components/(Forms|Tables|Transaction|Charts|Report|Panels)/`, `src/api/`, `src/utils/helper.ts`, `src/services/api/`, `src/hooks/(discount|voucher|flashsale|ramadhan|referral|useFormSale|useTableSale|promotions)`) + uninstall `antd` + `@ant-design/icons` + `react-quill`.
+v1.5 migration: **100% complete**. 37 feature modules. Phase 6 cleanup done — no more Ant Design, no more legacy `src/pages/`, `src/api/`, `src/services/`. See `memory/project_resume_point.md` for the current state and `memory/project_v15_progress.md` for per-feature history.

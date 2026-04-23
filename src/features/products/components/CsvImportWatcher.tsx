@@ -6,7 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
 import { useCsvImportStore } from '../stores/csv-import.store';
 import { csvImportService } from '../services/csv-import.service';
-import type { ProductCsvImportJobStatusPayload } from '../services/csv-import.service';
+import type { ProductCsvImportJobStatusPayload } from '../types';
 
 function getSnapshotPercent(s: ProductCsvImportJobStatusPayload): number {
   if (s.status === 'completed' || s.status === 'completed_with_errors') return 100;

@@ -30,6 +30,7 @@ import {
 } from '../hooks';
 import { buildFlashSalePayload } from '../utils/build-payload';
 import { hydrateFlashSaleForm } from '../utils/hydrate-form';
+import { parseFlashSaleConflict } from '../utils/conflict';
 
 const FlashSaleFormPage = () => {
   const navigate = useNavigate();
@@ -66,6 +67,32 @@ const FlashSaleFormPage = () => {
         if (created.id) navigate(`/flash-sales-new/${created.id}`, { replace: true });
       }
     } catch (error) {
+      const conflict = parseFlashSaleConflict(error);
+      if (conflict) {
+        const conflictIds = new Set(conflict.conflicts.map((c) => c.variantId));
+        if (conflictIds.size > 0) {
+          const current = form.getValues('variants') ?? [];
+          const next = current.filter((v) => !conflictIds.has(v.variantId));
+          form.setValue('variants', next, {
+            shouldValidate: true,
+            shouldDirty: true,
+          });
+        }
+        const preview = conflict.conflicts
+          .slice(0, 3)
+          .map((c) => c.productName ?? `#${c.variantId}`)
+          .join(', ');
+        const extraCount = Math.max(0, conflict.conflicts.length - 3);
+        toast.warning('Konflik dengan promo lain', {
+          description:
+            conflict.conflicts.length === 0
+              ? conflict.message ??
+                'Beberapa varian tumpang tindih dengan promo aktif lain.'
+              : `Dihapus dari daftar: ${preview}${extraCount > 0 ? ` +${extraCount} lagi` : ''}. Silakan cek dan simpan ulang.`,
+          duration: 10_000,
+        });
+        return;
+      }
       const msg =
         (axios.isAxiosError(error) && error.response?.data?.message) ||
         (error instanceof Error ? error.message : 'Gagal menyimpan flash sale');

@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/query-keys.constant';
 import { referenceService } from '../services';
 
@@ -49,5 +49,26 @@ export const useProfileCategories = () => {
     queryKey: QUERY_KEYS.references.profileCategories,
     queryFn: () => referenceService.getProfileCategories(),
     staleTime: REFERENCE_STALE_TIME,
+  });
+};
+
+export const useCreateAttribute = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (name: string) => referenceService.createAttribute(name),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.references.attributes });
+    },
+  });
+};
+
+export const useCreateAttributeValue = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ attributeId, value }: { attributeId: number; value: string }) =>
+      referenceService.createAttributeValue(attributeId, value),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.references.attributes });
+    },
   });
 };

@@ -1,4 +1,5 @@
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import type {
   CreateReportPayload,
   DashboardSummaryData,
@@ -13,11 +14,6 @@ const REPORT_ENDPOINTS = {
   download: (id: number | string) => `/admin/reports/${id}/download`,
   dashboardSummary: '/admin/reports/dashboard-summary',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 export const reportService = {
   async create<TData = unknown, TSummary = unknown>(

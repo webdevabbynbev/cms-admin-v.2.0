@@ -1,7 +1,8 @@
 import { axiosClient } from '@/config/axios';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type {
-  AdonisPaginatedPayload,
   Attribute,
+  AttributeValue,
   Brand,
   CategoryType,
   Concern,
@@ -13,14 +14,12 @@ const REFERENCE_ENDPOINTS = {
   brands: '/admin/brands',
   categoryTypes: '/admin/category-types/list',
   attributes: '/admin/attribute/list',
+  attribute: '/admin/attribute',
+  attributeValue: (attributeId: number) => `/admin/attribute/list-value/${attributeId}`,
   personas: '/admin/personas',
   concerns: '/admin/concern',
   profileCategories: '/admin/profile-categories',
 } as const;
-
-interface ServeWrapper<T> {
-  serve: T;
-}
 
 const DEFAULT_LARGE_PAGE_SIZE = 1000;
 
@@ -45,6 +44,35 @@ export const referenceService = {
       REFERENCE_ENDPOINTS.attributes,
     );
     return response.data.serve ?? [];
+  },
+
+  async createAttribute(name: string): Promise<Attribute> {
+    const response = await axiosClient.post<ServeWrapper<Attribute>>(
+      REFERENCE_ENDPOINTS.attribute,
+      { name },
+    );
+    const serve = response.data.serve;
+    return {
+      id: serve.id,
+      name: serve.name,
+      values: serve.values ?? [],
+    };
+  },
+
+  async createAttributeValue(
+    attributeId: number,
+    value: string,
+  ): Promise<AttributeValue> {
+    const response = await axiosClient.post<ServeWrapper<AttributeValue>>(
+      REFERENCE_ENDPOINTS.attributeValue(attributeId),
+      { value },
+    );
+    const serve = response.data.serve;
+    return {
+      id: serve.id,
+      value: serve.value,
+      label: serve.label,
+    };
   },
 
   async getPersonas(): Promise<Persona[]> {

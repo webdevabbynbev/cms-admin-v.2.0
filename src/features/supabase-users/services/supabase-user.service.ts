@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { SupabaseUser, SupabaseUserSummary, SupabaseUserListQuery } from '../types';
 import {
   normalizeSupabaseUser,
@@ -10,11 +10,6 @@ const EP = {
   list: '/admin/total-user-list',
   summary: '/admin/total-user-summary',
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildParams(filters: SupabaseUserListQuery): URLSearchParams {
   const params = new URLSearchParams();

@@ -22,10 +22,11 @@ export function buildFlashSalePayload(
     is_publish: values.isPublish,
     variants: values.variants
       .filter((v) => v.isActive)
-      .map((v) => ({
+      .map((v, index) => ({
         variant_id: v.variantId,
         flash_price: v.flashPrice,
         stock: v.flashStock,
+        position: index + 1,
       })),
   };
 }

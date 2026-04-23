@@ -1,4 +1,9 @@
-import type { MediaType, ProductStatus } from './product.enum';
+import type {
+  MediaType,
+  ProductStatus,
+  ProductStatusFilter,
+  SeoStatusFilter,
+} from './product.enum';
 
 export interface Brand {
   id: number;
@@ -59,6 +64,7 @@ export interface ProductListItem {
   metaTitle?: string | null;
   metaDescription?: string | null;
   metaKeywords?: string | null;
+  metaAi?: boolean | null;
   position: number;
   path?: string;
   priceDisplay?: string | number | null;
@@ -113,18 +119,6 @@ export interface ProductDetail extends ProductListItem {
   category_type_ids?: number[];
 }
 
-export interface AdonisPaginationMeta {
-  total: number;
-  perPage: number;
-  currentPage: number;
-  lastPage: number;
-  firstPage: number;
-}
-
-export interface AdonisPaginatedPayload<T> extends AdonisPaginationMeta {
-  data: T[];
-}
-
 export interface ProductListQuery {
   name?: string;
   status?: string;
@@ -137,4 +131,17 @@ export interface ProductListQuery {
 
 export interface ProductReorderPayload {
   updates: Array<{ id: number; order: number }>;
+}
+
+export interface CategoryFlags {
+  isMakeup: boolean;
+  isPerfume: boolean;
+  isSkincare: boolean;
+}
+
+export interface ProductFilterState {
+  name: string;
+  status: ProductStatusFilter;
+  brandId: number | null;
+  seoStatus: SeoStatusFilter;
 }

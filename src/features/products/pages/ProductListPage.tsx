@@ -1,15 +1,16 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
+import { FileSpreadsheet, Plus } from 'lucide-react';
 import { AppShell } from '@/layouts';
 import { Button } from '@/components/ui/button';
 import { PageContainer, PageHeader } from '@/components/common';
 import { ProductListFilters, ProductListTable } from '../components';
-import type { ProductFilterState } from '../components';
+import { CsvImportDialog } from '../components/CsvImportDialog';
 import { useProducts } from '../hooks';
 import {
   ProductStatusFilter,
   SeoStatusFilter,
+  type ProductFilterState,
   type ProductListQuery,
 } from '../types';
 import { hasSeoFilled } from '../utils/format';
@@ -88,10 +89,20 @@ const ProductListPage = () => {
           title="Products"
           description={`Manage your product catalog. ${data?.total ?? 0} total products.`}
           actions={
-            <Button onClick={() => navigate('/product-form-new')}>
-              <Plus className="h-4 w-4" />
-              Add Product
-            </Button>
+            <div className="flex items-center gap-2">
+              <CsvImportDialog
+                trigger={
+                  <Button variant="outline">
+                    <FileSpreadsheet className="h-4 w-4" />
+                    Import CSV
+                  </Button>
+                }
+              />
+              <Button onClick={() => navigate('/product-form-new')}>
+                <Plus className="h-4 w-4" />
+                Add Product
+              </Button>
+            </div>
           }
         />
 

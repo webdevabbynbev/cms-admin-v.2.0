@@ -1,7 +1,8 @@
-import { useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState, type DragEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Upload, X, CheckCircle, AlertCircle } from 'lucide-react';
 import axios from 'axios';
+import { cn } from '@/lib/utils';
 
 import { AppShell } from '@/layouts';
 import { PageContainer, PageHeader } from '@/components/common';
@@ -10,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 
 const ACCEPTED = '.jpg,.jpeg,.png,.webp';
 const MAX_MB = 10;
@@ -31,8 +33,6 @@ interface UploadResponse {
   results: UploadResult[];
   errors: UploadError[];
 }
-interface ServeWrapper<T> { serve: T; }
-
 type UploadType = 'logo' | 'banner';
 
 interface BrandBulkUploadPageProps {
@@ -44,6 +44,12 @@ const ENDPOINT: Record<UploadType, string> = {
   banner: '/brands/bulk/banners',
 };
 
+const ACCEPTED_MIME = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+function fileKey(file: File): string {
+  return `${file.name}-${file.size}-${file.lastModified}`;
+}
+
 const BrandBulkUploadPage = ({ uploadType }: BrandBulkUploadPageProps) => {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -52,18 +58,84 @@ const BrandBulkUploadPage = ({ uploadType }: BrandBulkUploadPageProps) => {
   const [isUploading, setIsUploading] = useState(false);
   const [result, setResult] = useState<UploadResponse | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = Array.from(e.target.files ?? []);
-    const valid = selected.filter((f) => f.size <= MAX_BYTES);
-    const tooLarge = selected.filter((f) => f.size > MAX_BYTES);
-    if (tooLarge.length > 0) {
-      setUploadError(`${tooLarge.length} file melebihi batas ${MAX_MB}MB dan diabaikan.`);
-    } else {
-      setUploadError(null);
+  const previewMapRef = useRef(new Map<string, string>());
+  const previews = useMemo(() => {
+    const map = previewMapRef.current;
+    const nextKeys = new Set(files.map(fileKey));
+
+    for (const [key, url] of map) {
+      if (!nextKeys.has(key)) {
+        URL.revokeObjectURL(url);
+        map.delete(key);
+      }
     }
+    for (const file of files) {
+      const key = fileKey(file);
+      if (!map.has(key)) {
+        map.set(key, URL.createObjectURL(file));
+      }
+    }
+    return Object.fromEntries(map);
+  }, [files]);
+
+  useEffect(() => {
+    const map = previewMapRef.current;
+    return () => {
+      for (const url of map.values()) URL.revokeObjectURL(url);
+      map.clear();
+    };
+  }, []);
+
+  const addFiles = (incoming: File[]) => {
+    const valid: File[] = [];
+    let tooLarge = 0;
+    let wrongType = 0;
+    incoming.forEach((f) => {
+      const typeOk =
+        ACCEPTED_MIME.includes(f.type) ||
+        /\.(jpe?g|png|webp)$/i.test(f.name);
+      if (!typeOk) {
+        wrongType += 1;
+        return;
+      }
+      if (f.size > MAX_BYTES) {
+        tooLarge += 1;
+        return;
+      }
+      valid.push(f);
+    });
+
+    const warnings: string[] = [];
+    if (tooLarge > 0) warnings.push(`${tooLarge} file > ${MAX_MB}MB diabaikan.`);
+    if (wrongType > 0) warnings.push(`${wrongType} file bukan gambar diabaikan.`);
+    setUploadError(warnings.length > 0 ? warnings.join(' ') : null);
     setFiles(valid);
     setResult(null);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    addFiles(Array.from(e.target.files ?? []));
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+    addFiles(Array.from(e.dataTransfer.files ?? []));
   };
 
   const removeFile = (idx: number) => {
@@ -80,7 +152,6 @@ const BrandBulkUploadPage = ({ uploadType }: BrandBulkUploadPageProps) => {
     const formData = new FormData();
     files.forEach((f) => formData.append('files', f));
 
-    // Simulate progress increments while waiting
     const interval = setInterval(() => {
       setProgress((p) => (p < 85 ? p + 5 : p));
     }, 600);
@@ -128,17 +199,29 @@ const BrandBulkUploadPage = ({ uploadType }: BrandBulkUploadPageProps) => {
         />
 
         <div className="flex flex-col gap-5 rounded-lg border border-border p-5">
-          {/* File input area */}
           <div
-            className="flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed border-border p-8 transition-colors hover:bg-muted/40"
+            className={cn(
+              'flex cursor-pointer flex-col items-center justify-center rounded-md border-2 border-dashed p-8 transition-colors',
+              isDragOver
+                ? 'border-primary bg-primary/5'
+                : 'border-border hover:bg-muted/40',
+            )}
             onClick={() => inputRef.current?.click()}
             onKeyDown={(e) => e.key === 'Enter' && inputRef.current?.click()}
+            onDragOver={handleDragOver}
+            onDragEnter={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
             tabIndex={0}
             role="button"
           >
             <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-            <p className="text-sm font-medium">Klik untuk pilih file</p>
-            <p className="text-xs text-muted-foreground">JPG, JPEG, PNG, WEBP — maks. {MAX_MB}MB per file</p>
+            <p className="text-sm font-medium">
+              {isDragOver ? 'Lepaskan file di sini' : 'Klik atau drop file di sini'}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              JPG, JPEG, PNG, WEBP — maks. {MAX_MB}MB per file
+            </p>
             <input
               ref={inputRef}
               type="file"
@@ -149,24 +232,48 @@ const BrandBulkUploadPage = ({ uploadType }: BrandBulkUploadPageProps) => {
             />
           </div>
 
-          {/* Selected files */}
           {files.length > 0 ? (
             <div className="flex flex-col gap-2">
               <p className="text-sm font-medium">{files.length} file dipilih</p>
-              <div className="max-h-48 overflow-y-auto rounded-md border border-border p-2">
-                {files.map((f, i) => (
-                  <div key={i} className="flex items-center justify-between gap-2 py-1">
-                    <span className="min-w-0 truncate text-sm">{f.name}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => removeFile(i)}
+              <div className="grid max-h-64 grid-cols-2 gap-2 overflow-y-auto rounded-md border border-border p-2 sm:grid-cols-3 md:grid-cols-4">
+                {files.map((f, i) => {
+                  const key = `${f.name}-${f.size}-${f.lastModified}`;
+                  const previewUrl = previews[key];
+                  return (
+                    <div
+                      key={i}
+                      className="group relative flex flex-col gap-1 rounded-md border p-1.5"
                     >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
+                      {previewUrl ? (
+                        <img
+                          src={previewUrl}
+                          alt={f.name}
+                          className="h-20 w-full rounded object-cover"
+                        />
+                      ) : (
+                        <div className="h-20 w-full rounded bg-muted" />
+                      )}
+                      <p
+                        className="truncate text-xs"
+                        title={f.name}
+                      >
+                        {f.name}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground">
+                        {(f.size / 1024).toFixed(1)} KB
+                      </p>
+                      <Button
+                        type="button"
+                        variant="secondary"
+                        size="icon-sm"
+                        className="absolute right-1 top-1 opacity-0 group-hover:opacity-100"
+                        onClick={() => removeFile(i)}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ) : null}
@@ -205,7 +312,6 @@ const BrandBulkUploadPage = ({ uploadType }: BrandBulkUploadPageProps) => {
           </div>
         </div>
 
-        {/* Results */}
         {result ? (
           <div className="flex flex-col gap-4 rounded-lg border border-border p-5">
             <div className="flex flex-wrap items-center gap-3">

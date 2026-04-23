@@ -10,14 +10,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useBrands } from '../hooks';
-import { ProductStatusFilter, SeoStatusFilter } from '../types';
-
-export interface ProductFilterState {
-  name: string;
-  status: ProductStatusFilter;
-  brandId: number | null;
-  seoStatus: SeoStatusFilter;
-}
+import {
+  ProductStatusFilter,
+  SeoStatusFilter,
+  type ProductFilterState,
+} from '../types';
 
 interface ProductListFiltersProps {
   value: ProductFilterState;

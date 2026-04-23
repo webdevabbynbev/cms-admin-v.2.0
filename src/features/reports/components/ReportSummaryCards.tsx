@@ -1,13 +1,7 @@
 import { memo } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-
-export interface ReportSummaryCard {
-  label: string;
-  value: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  helper?: string;
-}
+import type { ReportSummaryCard } from '../types';
 
 interface ReportSummaryCardsProps {
   cards: ReportSummaryCard[];

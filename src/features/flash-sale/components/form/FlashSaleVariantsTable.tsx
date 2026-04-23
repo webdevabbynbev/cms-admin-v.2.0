@@ -1,6 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useRef, useState, type DragEvent } from 'react';
 import { useFormContext, useFieldArray } from 'react-hook-form';
-import { Trash2 } from 'lucide-react';
+import { GripVertical, Trash2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
@@ -39,13 +39,50 @@ const FlashSaleVariantsTableComponent = ({
   onSelectedChange,
 }: FlashSaleVariantsTableProps) => {
   const form = useFormContext<FlashSaleFormValues>();
-  const { fields, remove, update } = useFieldArray({
+  const { fields, remove, update, move } = useFieldArray({
     control: form.control,
     name: 'variants',
     keyName: '_rhfKey',
   });
 
   const watchedVariants = form.watch('variants');
+
+  const dragFromRef = useRef<number | null>(null);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+
+  const handleDragStart = (event: DragEvent<HTMLTableRowElement>, index: number) => {
+    dragFromRef.current = index;
+    setDragIndex(index);
+    event.dataTransfer.effectAllowed = 'move';
+    try {
+      event.dataTransfer.setData('text/plain', String(index));
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLTableRowElement>, index: number) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    setOverIndex(index);
+  };
+
+  const handleDrop = (event: DragEvent<HTMLTableRowElement>, dropIndex: number) => {
+    event.preventDefault();
+    const from = dragFromRef.current;
+    dragFromRef.current = null;
+    setDragIndex(null);
+    setOverIndex(null);
+    if (from == null || from === dropIndex) return;
+    move(from, dropIndex);
+  };
+
+  const handleDragEnd = () => {
+    dragFromRef.current = null;
+    setDragIndex(null);
+    setOverIndex(null);
+  };
 
   const allChecked = useMemo(
     () => fields.length > 0 && selectedIds.length === fields.length,
@@ -102,6 +139,7 @@ const FlashSaleVariantsTableComponent = ({
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-6" />
                 <TableHead className="w-10">
                   <Checkbox
                     checked={allChecked}
@@ -131,8 +169,20 @@ const FlashSaleVariantsTableComponent = ({
                 return (
                   <TableRow
                     key={field._rhfKey}
-                    className={cn(!watched.isActive && 'opacity-60')}
+                    draggable
+                    onDragStart={(event) => handleDragStart(event, index)}
+                    onDragOver={(event) => handleDragOver(event, index)}
+                    onDrop={(event) => handleDrop(event, index)}
+                    onDragEnd={handleDragEnd}
+                    className={cn(
+                      !watched.isActive && 'opacity-60',
+                      dragIndex === index && 'opacity-40',
+                      overIndex === index && dragIndex !== index && 'bg-primary/5',
+                    )}
                   >
+                    <TableCell className="cursor-grab text-muted-foreground active:cursor-grabbing">
+                      <GripVertical className="h-4 w-4" />
+                    </TableCell>
                     <TableCell>
                       <Checkbox
                         checked={checked}

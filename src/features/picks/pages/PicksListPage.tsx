@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { ArrowUpDown, Plus } from 'lucide-react';
 
 import { AppShell } from '@/layouts';
 import { PageContainer, PageHeader } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-import { PickListTable, PickFormDialog } from '../components';
+import {
+  PickListTable,
+  PickFormDialog,
+  PickReorderDialog,
+} from '../components';
 import { usePicks } from '../hooks';
 import type { PickRecord, PicksType } from '../types';
 
@@ -35,6 +39,7 @@ const PicksListPage = ({ picksType }: PicksListPageProps) => {
   const [perPage, setPerPage] = useState(DEFAULT_PER_PAGE);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<PickRecord | null>(null);
+  const [reorderOpen, setReorderOpen] = useState(false);
 
   const { data, isLoading, isError } = usePicks(endpoint, {
     q: search.trim() || undefined,
@@ -47,17 +52,23 @@ const PicksListPage = ({ picksType }: PicksListPageProps) => {
       <PageContainer>
         <PageHeader
           title={TITLE_MAP[picksType]}
-          description={`Kurasi produk pilihan. ${data?.total ?? 0} total. Drag-drop reorder deferred.`}
+          description={`Kurasi produk pilihan. ${data?.total ?? 0} total.`}
           actions={
-            <Button
-              onClick={() => {
-                setEditing(null);
-                setDialogOpen(true);
-              }}
-            >
-              <Plus className="h-4 w-4" />
-              Tambah Pick
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button variant="outline" onClick={() => setReorderOpen(true)}>
+                <ArrowUpDown className="h-4 w-4" />
+                Atur Urutan
+              </Button>
+              <Button
+                onClick={() => {
+                  setEditing(null);
+                  setDialogOpen(true);
+                }}
+              >
+                <Plus className="h-4 w-4" />
+                Tambah Pick
+              </Button>
+            </div>
           }
         />
 
@@ -97,6 +108,13 @@ const PicksListPage = ({ picksType }: PicksListPageProps) => {
           }}
           endpoint={endpoint}
           pick={editing}
+        />
+
+        <PickReorderDialog
+          open={reorderOpen}
+          onOpenChange={setReorderOpen}
+          endpoint={endpoint}
+          title={TITLE_MAP[picksType]}
         />
       </PageContainer>
     </AppShell>

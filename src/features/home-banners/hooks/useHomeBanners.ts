@@ -9,6 +9,7 @@ import { homeBannerService } from '../services';
 import type {
   HomeBannerSectionListQuery,
   HomeBannerSectionPayload,
+  HomeBannerSectionReorderPayload,
 } from '../types';
 
 export const useHomeBannerSections = (filters: HomeBannerSectionListQuery) =>
@@ -49,6 +50,17 @@ export const useDeleteHomeBannerSection = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: (id: number | string) => homeBannerService.removeSection(id),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: QUERY_KEYS.homeBanners.root });
+    },
+  });
+};
+
+export const useReorderHomeBannerSections = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: HomeBannerSectionReorderPayload) =>
+      homeBannerService.reorderSections(payload),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: QUERY_KEYS.homeBanners.root });
     },

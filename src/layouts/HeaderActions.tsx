@@ -1,6 +1,6 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Moon, Sun, User } from 'lucide-react';
+import { KeyRound, LogOut, Moon, Sun, User } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,12 +14,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 import { useAuth } from '@/features/auth';
-import { useThemeStore } from '@/hooks/useThemeStore';
+import { useThemeStore } from '@/stores/theme.store';
+import ChangePasswordDialog from './ChangePasswordDialog';
 
 const HeaderActionsComponent = () => {
   const { user, logout } = useAuth();
   const { isDarkMode, toggleDarkMode } = useThemeStore();
   const navigate = useNavigate();
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false);
 
   const initials = (user?.firstName ?? user?.email ?? '?')
     .split(' ')
@@ -80,12 +82,22 @@ const HeaderActionsComponent = () => {
           <DropdownMenuItem
             onSelect={(event) => {
               event.preventDefault();
-              navigate('/settings-new');
+              navigate('/profile-new');
             }}
             className="cursor-pointer"
           >
             <User className="h-4 w-4" />
             <span>Lihat Profil</span>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={(event) => {
+              event.preventDefault();
+              setChangePasswordOpen(true);
+            }}
+            className="cursor-pointer"
+          >
+            <KeyRound className="h-4 w-4" />
+            <span>Ubah Kata Sandi</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -97,6 +109,11 @@ const HeaderActionsComponent = () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <ChangePasswordDialog
+        open={changePasswordOpen}
+        onOpenChange={setChangePasswordOpen}
+      />
     </div>
   );
 };

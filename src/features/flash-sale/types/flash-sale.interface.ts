@@ -40,6 +40,7 @@ export interface FlashSaleVariantPayload {
   variant_id: number;
   flash_price: number;
   stock: number;
+  position: number;
 }
 
 export interface FlashSaleFormPayload {
@@ -56,4 +57,17 @@ export interface FlashSaleFormPayload {
 
 export interface FlashSaleReorderPayload {
   updates: Array<{ id: number; order: number }>;
+}
+
+export interface FlashSaleConflict {
+  variantId: number;
+  productId?: number | null;
+  productName?: string | null;
+  promoName?: string | null;
+  message?: string | null;
+}
+
+export interface FlashSaleConflictResult {
+  conflicts: FlashSaleConflict[];
+  message: string | null;
 }

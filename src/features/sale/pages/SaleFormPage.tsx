@@ -37,6 +37,7 @@ import {
 } from '@/components/ui/command';
 
 import { axiosClient } from '@/config/axios';
+import type { ServeWrapper } from '@/lib/api-types';
 import { cn } from '@/lib/utils';
 import { defaultSaleFormValues, saleFormSchema, type SaleFormValues } from '../schemas';
 import { useCreateSale, useSaleDetail, useUpdateSale } from '../hooks';
@@ -69,8 +70,6 @@ interface RawVariant {
   medias?: { type: number; url: string }[];
   product?: { name: string; medias?: { type: number; url: string }[] };
 }
-
-interface ServeWrapper<T> { serve: T; }
 
 function useProductSearch(q: string) {
   return useQuery({

@@ -4,6 +4,7 @@ import { useFormContext } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import {
   FormControl,
   FormDescription,
@@ -99,6 +100,24 @@ const ProductFormSeoComponent = () => {
               </FormControl>
               <FormDescription>Separate keywords with commas</FormDescription>
               <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="meta_ai"
+          render={({ field }) => (
+            <FormItem className="flex items-center justify-between rounded-lg border p-3">
+              <div className="flex flex-col gap-0.5">
+                <FormLabel className="m-0">AI-generated SEO</FormLabel>
+                <FormDescription>
+                  Let the backend auto-fill meta title, description, and keywords based on product content.
+                </FormDescription>
+              </div>
+              <FormControl>
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
             </FormItem>
           )}
         />

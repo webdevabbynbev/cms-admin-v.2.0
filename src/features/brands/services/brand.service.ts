@@ -1,5 +1,5 @@
 import { axiosClient } from '@/config/axios';
-import type { AdonisPaginatedPayload } from '@/features/products/types';
+import type { AdonisPaginatedPayload, ServeWrapper } from '@/lib/api-types';
 import type { Brand, BrandListQuery, BrandPayload } from '../types';
 import { normalizeBrand } from '../utils/normalize';
 
@@ -9,11 +9,6 @@ const BRAND_ENDPOINTS = {
   logo: (slug: string) => `/admin/brands/${encodeURIComponent(slug)}/logo`,
   banner: (slug: string) => `/admin/brands/${encodeURIComponent(slug)}/banner`,
 } as const;
-
-interface ServeWrapper<T> {
-  message?: string;
-  serve: T;
-}
 
 function buildListParams(filters: BrandListQuery): URLSearchParams {
   const params = new URLSearchParams();
