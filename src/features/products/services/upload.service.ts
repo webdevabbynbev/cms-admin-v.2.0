@@ -1,4 +1,5 @@
 import { axiosClient } from '@/config/axios';
+import type { UploadResponse } from '../types';
 
 const UPLOAD_ENDPOINT = '/upload';
 
@@ -12,11 +13,6 @@ export const UPLOAD_FOLDERS = {
 } as const;
 
 export type UploadFolder = (typeof UPLOAD_FOLDERS)[keyof typeof UPLOAD_FOLDERS];
-
-interface UploadResponse {
-  signedUrl: string;
-  [key: string]: unknown;
-}
 
 export const uploadService = {
   async upload(

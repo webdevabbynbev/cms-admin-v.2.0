@@ -59,6 +59,7 @@ const HeaderActionsComponent = () => {
             variant="ghost"
             className="flex items-center gap-2 px-2"
             aria-label="Profile menu"
+            data-testid="header-user-menu"
           >
             <Avatar className="h-8 w-8">
               {user?.photo_profile_url ? (

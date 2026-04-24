@@ -37,3 +37,14 @@ export interface BannerFormPayload {
   image_file?: File | null;
   image_mobile_file?: File | null;
 }
+
+export interface NestedBannerResponse<T> {
+  data: {
+    serve: T;
+  };
+}
+
+export interface DirectBannerResponse<T> {
+  message?: string;
+  serve: T;
+}

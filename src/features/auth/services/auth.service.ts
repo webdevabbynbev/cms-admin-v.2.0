@@ -1,12 +1,10 @@
 import { axiosClient } from '@/config/axios';
 import type {
-  AuthPermissions,
-  AuthUser,
   ChangePasswordRequest,
   ForgotPasswordRequest,
+  LoginApiResponse,
   LoginRequest,
   LoginResponse,
-  MenuAccess,
 } from '../types';
 
 const AUTH_ENDPOINTS = {
@@ -14,16 +12,6 @@ const AUTH_ENDPOINTS = {
   forgot: '/auth/forgot',
   changePassword: '/profile/password',
 } as const;
-
-interface LoginApiResponse {
-  message: string;
-  serve: {
-    data: AuthUser;
-    token: string;
-    permissions: AuthPermissions | null;
-    menu_access: MenuAccess;
-  } | null;
-}
 
 export const authService = {
   async login(payload: LoginRequest): Promise<LoginResponse> {

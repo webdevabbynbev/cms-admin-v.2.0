@@ -74,7 +74,6 @@ describe('getProductPrimaryImage', () => {
 
   it('returns null when medias is undefined', () => {
     const p = { ...base } as ProductListItem;
-    // @ts-expect-error simulating missing field
     p.medias = undefined;
     expect(getProductPrimaryImage(p)).toBeNull();
   });

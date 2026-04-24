@@ -62,3 +62,13 @@ export interface ChangePasswordRequest {
   oldPassword: string;
   newPassword: string;
 }
+
+export interface LoginApiResponse {
+  message: string;
+  serve: {
+    data: AuthUser;
+    token: string;
+    permissions: AuthPermissions | null;
+    menu_access: MenuAccess;
+  } | null;
+}

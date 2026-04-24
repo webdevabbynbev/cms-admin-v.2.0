@@ -145,3 +145,8 @@ export interface ProductFilterState {
   brandId: number | null;
   seoStatus: SeoStatusFilter;
 }
+
+export interface UploadResponse {
+  signedUrl: string;
+  [key: string]: unknown;
+}

@@ -5,6 +5,8 @@ import type {
   BannerFormPayload,
   BannerListQuery,
   BannerReorderPayload,
+  DirectBannerResponse,
+  NestedBannerResponse,
 } from '../types';
 
 const BANNER_ENDPOINTS = {
@@ -12,17 +14,6 @@ const BANNER_ENDPOINTS = {
   detail: (id: number | string) => `/admin/banners/${id}`,
   reorder: '/admin/banners/update-order',
 } as const;
-
-interface NestedBannerResponse<T> {
-  data: {
-    serve: T;
-  };
-}
-
-interface DirectBannerResponse<T> {
-  message?: string;
-  serve: T;
-}
 
 type RawBanner = Banner | { $attributes: Banner };
 
